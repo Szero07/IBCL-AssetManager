@@ -192,13 +192,61 @@ const Devolucion={
 
     registrar(){
 
-        // siguiente sprint
+        if(this.equipos.length===0){
+
+            alert("Debe agregar al menos un equipo.");
+
+            return;
+
+        }
+
+        const datos={
+
+            equipos:this.equipos.map(e=>e.id)
+
+        };
+
+        google.script.run
+
+        .withSuccessHandler(resultado=>{
+
+            alert(resultado.mensaje);
+
+            if(resultado.ok){
+
+                this.limpiar();
+
+            }
+
+        })
+
+        .registrarDevolucion(datos);
 
     },
 
     limpiar(){
 
-        // siguiente sprint
+        this.equipos=[];
+
+        this.responsable=null;
+
+        this.actualizarTabla();
+
+        this.actualizarEstadoFormulario();
+
+        document.getElementById("codigoDevolucion").value="";
+
+        document.getElementById("observacionesDevolucion").value="";
+
+        document.getElementById("devNombre").value="";
+
+        document.getElementById("devCedula").value="";
+
+        document.getElementById("devCargo").value="";
+
+        document.getElementById("devUbicacion").value="";
+
+        document.getElementById("codigoDevolucion").focus();
 
     }
 

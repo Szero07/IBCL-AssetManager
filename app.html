@@ -38,6 +38,17 @@ const App = {
             document.getElementById("btnConsulta").classList.add("activo");
 
         this.vistaActual = vista;
+        if(vista==="entrega"){
+
+            document.getElementById("codigoEquipo").focus();
+
+        }
+
+        if(vista==="devolucion"){
+
+            document.getElementById("codigoDevolucion").focus();
+
+        }
 
     },
 
