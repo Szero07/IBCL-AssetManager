@@ -90,6 +90,27 @@ const Personal = (() => {
     return obtenerPorId(id)!=null;
 
   }
+  function obtenerPorTexto(texto){
+
+    if(!texto) return null;
+
+    const coincidencia=texto.match(/CC\s*(\d+)/);
+
+    if(!coincidencia)
+        return null;
+
+    const cedula=coincidencia[1];
+
+    const lista=obtenerPersonal();
+
+    return lista.find(
+
+        p=>String(p.cedula)==String(cedula)
+
+    );
+
+  }
+
 
   return{
 
@@ -98,6 +119,8 @@ const Personal = (() => {
     obtenerPorId,
 
     obtenerPorCedula,
+
+    obtenerPorTexto,
 
     buscar,
 
@@ -129,3 +152,11 @@ function obtenerEmpleado(id){
   return Personal.obtenerPorId(id);
 
 }
+function obtenerEmpleadoPorTexto(texto){
+
+    return Personal.obtenerPorTexto(texto);
+
+}
+
+
+
