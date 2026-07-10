@@ -204,18 +204,131 @@
 
         <!-- ===================== -->
 
-        <section id="devolucion"
-                 style="display:none;">
+        <section id="devolucion" style="display:none;">
 
             <div class="card">
 
-                <h2>Devolución de Equipos</h2>
+                <h2>📥 Devolución de Equipos</h2>
 
-                <p>
+                <div class="fila">
 
-                    Aquí aparecerá el formulario de devolución.
+                    <div class="grow">
 
-                </p>
+                        <label>Código</label>
+
+                        <input
+                            id="codigoDevolucion"
+                            placeholder="CPU0001">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h2>👤 Información del Responsable</h2>
+
+                <div class="grid2">
+
+                    <div>
+
+                        <label>Nombre</label>
+
+                        <input id="devNombre" readonly>
+
+                    </div>
+
+                    <div>
+
+                        <label>Cédula</label>
+
+                        <input id="devCedula" readonly>
+
+                    </div>
+
+                    <div>
+
+                        <label>Cargo</label>
+
+                        <input id="devCargo" readonly>
+
+                    </div>
+
+                    <div>
+
+                        <label>Ubicación</label>
+
+                        <input id="devUbicacion" readonly>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h2>💻 Equipos a devolver</h2>
+
+                <table id="tablaDevolucion">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th></th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+
+                <div style="margin-top:15px;text-align:right;font-weight:bold;">
+
+                    Equipos agregados:
+
+                    <span id="contadorDevolucion">0</span>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <label>Observaciones</label>
+
+                <textarea
+                    id="observacionesDevolucion"
+                    rows="4"></textarea>
+
+            </div>
+
+            <div class="card">
+
+                <button
+
+                    id="btnRegistrarDevolucion"
+
+                    class="btnVerde"
+
+                    disabled
+
+                    onclick="App.registrarDevolucion()">
+
+                    Registrar Devolución
+
+                </button>
 
             </div>
 
