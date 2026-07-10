@@ -26,19 +26,167 @@ const Devolucion={
 
     agregarEquipo(){
 
-        // siguiente sprint
+        const codigo=document
+            .getElementById("codigoDevolucion")
+            .value
+            .trim()
+            .toUpperCase();
+
+        if(codigo=="")
+            return;
+
+        if(this.equipos.some(e=>e.id==codigo)){
+
+            alert("Ese equipo ya fue agregado.");
+
+            return;
+
+        }
+
+        google.script.run
+
+        .withSuccessHandler(equipo=>{
+
+            if(!equipo){
+
+                alert("Equipo no encontrado.");
+
+                return;
+
+            }
+
+            if(equipo.estado!="Asignado"){
+
+                alert("El equipo no se encuentra asignado.");
+
+                return;
+
+            }
+
+            google.script.run
+
+            .withSuccessHandler(empleado=>{
+
+                if(!empleado){
+
+                    alert("No fue posible identificar al responsable.");
+
+                    return;
+
+                }
+
+                this.responsable=empleado;
+
+                this.equipos.push(equipo);
+
+                this.actualizarResponsable();
+
+                this.actualizarTabla();
+
+                this.actualizarEstadoFormulario();
+
+                document.getElementById("codigoDevolucion").value="";
+
+                document.getElementById("codigoDevolucion").focus();
+
+            })
+
+            .obtenerEmpleadoPorTexto(equipo.utilizado);
+
+        })
+
+        .buscarEquipo(codigo);
+
+    },
+
+
+
+    actualizarResponsable(){
+
+        if(!this.responsable)
+            return;
+
+        document.getElementById("devNombre").value=this.responsable.nombre;
+
+        document.getElementById("devCedula").value=this.responsable.cedula;
+
+        document.getElementById("devCargo").value=this.responsable.cargo;
+
+        document.getElementById("devUbicacion").value=this.responsable.ubicacion;
+
+    },
+
+
+    actualizarEstadoFormulario(){
+
+        document.getElementById("contadorDevolucion").innerText=this.equipos.length;
+
+        document.getElementById("btnRegistrarDevolucion").disabled=
+
+            this.equipos.length==0;
 
     },
 
     actualizarTabla(){
 
-        // siguiente sprint
+        const tbody=document.querySelector("#tablaDevolucion tbody");
+
+        tbody.innerHTML="";
+
+        this.equipos.forEach((eq,i)=>{
+
+            tbody.innerHTML+=`
+
+            <tr>
+
+                <td>${eq.id}</td>
+
+                <td>${eq.descripcion}</td>
+
+                <td>${eq.marca}</td>
+
+                <td>${eq.modelo}</td>
+
+                <td>
+
+                    <button
+
+                        class="btnEliminar"
+
+                        onclick="Devolucion.eliminarEquipo(${i})">
+
+                        X
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        });
 
     },
 
     eliminarEquipo(indice){
 
-        // siguiente sprint
+        this.equipos.splice(indice,1);
+
+        if(this.equipos.length===0){
+
+            this.responsable=null;
+
+            document.getElementById("devNombre").value="";
+            document.getElementById("devCedula").value="";
+            document.getElementById("devCargo").value="";
+            document.getElementById("devUbicacion").value="";
+
+        }
+
+        this.actualizarTabla();
+
+        this.actualizarEstadoFormulario();
 
     },
 
