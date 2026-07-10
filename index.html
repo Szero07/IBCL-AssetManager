@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <header>
+
+        <div class="logo">
+
+            <h1>IBCL Asset Manager</h1>
+
+            <span>Versión 1.0</span>
+
+        </div>
+
+    </header>
+
+    <nav>
+
+        <button id="btnEntrega"
+                class="menu activo"
+                onclick="App.mostrarVista('entrega')">
+
+            📦 Entrega
+
+        </button>
+
+        <button id="btnDevolucion"
+                class="menu"
+                onclick="App.mostrarVista('devolucion')">
+
+            📥 Devolución
+
+        </button>
+
+        <button id="btnConsulta"
+                class="menu"
+                onclick="App.mostrarVista('consulta')">
+
+            🔍 Consulta
+
+        </button>
+
+    </nav>
+
+    <main>
+
+        <!-- ===================== -->
+
+        <!-- ENTREGA -->
+
+        <!-- ===================== -->
+
+        <section id="entrega">
+
+        <!-- Información del empleado -->
+
+        <div class="card">
+
+            <h2>👤 Información del Empleado</h2>
+
+            <label>Empleado</label>
+
+            <select id="empleado" onchange="App.seleccionarEmpleado()">
+
+                <option value="">Cargando empleados...</option>
+
+            </select>
+
+            <div class="grid2">
+
+                <div>
+
+                    <label>Cédula</label>
+
+                    <input id="cedula" readonly>
+
+                </div>
+
+                <div>
+
+                    <label>Cargo</label>
+
+                    <input id="cargo" readonly>
+
+                </div>
+
+            </div>
+
+            <label>Ubicación</label>
+
+            <input id="ubicacion" readonly>
+
+        </div>
+
+        <!-- Equipos -->
+
+        <div class="card">
+
+            <h2>💻 Equipos</h2>
+
+            <div class="fila">
+
+                <div class="grow">
+
+                    <label>Código</label>
+
+                    <input
+                        id="codigoEquipo"
+                        placeholder="CPU0001">
+
+                </div>
+
+                <div>
+
+                    <button
+                        style="margin-top:28px;"
+                        onclick="App.agregarEquipo()">
+
+                        Agregar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <table id="tablaEquipos">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Código</th>
+
+                        <th>Descripción</th>
+
+                        <th>Marca</th>
+
+                        <th>Modelo</th>
+
+                        <th></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Observaciones -->
+
+        <div class="card">
+
+            <h2>📝 Observaciones</h2>
+
+            <textarea
+                id="observaciones"
+                rows="4"></textarea>
+
+        </div>
+
+        <!-- Registrar -->
+
+        <div class="card">
+
+            <button
+                class="btnVerde"
+                onclick="App.registrarEntrega()">
+
+                Registrar Entrega
+
+            </button>
+
+        </div>
+
+    </section>
+
+        <!-- ===================== -->
+
+        <!-- DEVOLUCIÓN -->
+
+        <!-- ===================== -->
+
+        <section id="devolucion"
+                 style="display:none;">
+
+            <div class="card">
+
+                <h2>Devolución de Equipos</h2>
+
+                <p>
+
+                    Aquí aparecerá el formulario de devolución.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- ===================== -->
+
+        <!-- CONSULTA -->
+
+        <!-- ===================== -->
+
+        <section id="consulta"
+                 style="display:none;">
+
+            <div class="card">
+
+                <h2>Consulta de Equipos</h2>
+
+                <p>
+
+                    Aquí aparecerá el buscador.
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        Desarrollado para IBCL SAS - Área TI
+
+    </footer>
+
+</div>
+
+<?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?>
+
+</body>
+
+</html>

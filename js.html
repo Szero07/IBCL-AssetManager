@@ -1,0 +1,49 @@
+<script>
+
+const App = {
+
+    vistaActual: "entrega",
+
+    iniciar() {
+
+        this.mostrarVista("entrega");
+
+    },
+
+    mostrarVista(vista) {
+
+        // Ocultar todas las vistas
+        document.getElementById("entrega").style.display = "none";
+        document.getElementById("devolucion").style.display = "none";
+        document.getElementById("consulta").style.display = "none";
+
+        // Mostrar la seleccionada
+        document.getElementById(vista).style.display = "block";
+
+        // Actualizar botones del menú
+        document.querySelectorAll(".menu").forEach(btn => {
+            btn.classList.remove("activo");
+        });
+
+        if(vista === "entrega")
+            document.getElementById("btnEntrega").classList.add("activo");
+
+        if(vista === "devolucion")
+            document.getElementById("btnDevolucion").classList.add("activo");
+
+        if(vista === "consulta")
+            document.getElementById("btnConsulta").classList.add("activo");
+
+        this.vistaActual = vista;
+
+    }
+
+};
+
+window.onload = () => {
+
+    App.iniciar();
+
+};
+
+</script>
