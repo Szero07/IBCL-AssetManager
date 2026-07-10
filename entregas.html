@@ -1,0 +1,225 @@
+<script>
+
+const Entrega={
+
+    empleado:null,
+
+    equipos:[],
+
+    cargarPersonal(){
+
+        google.script.run
+        .withSuccessHandler(lista=>{
+
+            const combo=document.getElementById("empleado");
+
+            combo.innerHTML="<option value=''>Seleccione...</option>";
+
+            lista.forEach(emp=>{
+
+                combo.innerHTML+=`
+                    <option value="${emp.id}">
+                        ${emp.nombre}
+                    </option>
+                `;
+
+            });
+
+        })
+        .obtenerPersonal();
+
+    },
+
+    seleccionarEmpleado(){
+
+        const id=document.getElementById("empleado").value;
+
+        if(id==""){
+
+            this.empleado=null;
+
+            document.getElementById("cedula").value="";
+            document.getElementById("cargo").value="";
+            document.getElementById("ubicacion").value="";
+
+            return;
+
+        }
+
+        google.script.run
+
+        .withSuccessHandler(emp=>{
+
+            this.empleado=emp;
+
+            document.getElementById("cedula").value=emp.cedula;
+
+            document.getElementById("cargo").value=emp.cargo;
+
+            document.getElementById("ubicacion").value=emp.ubicacion;
+
+        })
+
+        .obtenerEmpleado(id);
+
+    },
+
+    agregarEquipo(){
+
+        const codigo=document
+            .getElementById("codigoEquipo")
+            .value
+            .trim()
+            .toUpperCase();
+
+        if(codigo=="") return;
+
+        if(this.equipos.some(e=>e.id==codigo)){
+
+            alert("Ese equipo ya fue agregado.");
+
+            return;
+
+        }
+
+        google.script.run
+
+        .withSuccessHandler(equipo=>{
+
+            if(!equipo){
+
+                alert("Equipo no encontrado.");
+
+                return;
+
+            }
+
+            if(equipo.estado=="Asignado"){
+
+                alert("El equipo ya está asignado.");
+
+                return;
+
+            }
+
+            this.equipos.push(equipo);
+
+            this.actualizarTabla();
+
+            document.getElementById("codigoEquipo").value="";
+
+            document.getElementById("codigoEquipo").focus();
+
+        })
+
+        .buscarEquipo(codigo);
+
+    },
+
+    actualizarTabla(){
+
+        const tbody=document.querySelector("#tablaEquipos tbody");
+
+        tbody.innerHTML="";
+
+        this.equipos.forEach((eq,i)=>{
+
+            tbody.innerHTML+=`
+
+            <tr>
+
+                <td>${eq.id}</td>
+
+                <td>${eq.descripcion}</td>
+
+                <td>${eq.marca}</td>
+
+                <td>${eq.modelo}</td>
+
+                <td>
+
+                    <button class="btnEliminar"
+
+                        onclick="Entrega.eliminarEquipo(${i})">
+
+                        X
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        });
+
+    },
+
+    eliminarEquipo(indice){
+
+        this.equipos.splice(indice,1);
+
+        this.actualizarTabla();
+
+    },
+
+    registrar(){
+
+        if(!this.empleado){
+
+            alert("Seleccione un empleado.");
+
+            return;
+
+        }
+
+        if(this.equipos.length==0){
+
+            alert("Debe agregar al menos un equipo.");
+
+            return;
+
+        }
+
+        const datos={
+
+            empleadoId:this.empleado.id,
+
+            equipos:this.equipos.map(e=>e.id)
+
+        };
+
+        google.script.run
+
+        .withSuccessHandler(resultado=>{
+
+            alert(resultado.mensaje);
+
+            if(resultado.ok){
+
+                this.limpiar();
+
+            }
+
+        })
+
+        .registrarEntrega(datos);
+
+    },
+
+    limpiar(){
+
+        this.equipos=[];
+
+        this.actualizarTabla();
+
+        document.getElementById("codigoEquipo").value="";
+
+        document.getElementById("observaciones").value="";
+
+    }
+
+};
+
+</script>
