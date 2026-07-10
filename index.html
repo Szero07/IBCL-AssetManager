@@ -161,6 +161,11 @@
 
             </table>
 
+            <div style="margin-top:15px;text-align:right;font-weight:bold;">
+                Equipos agregados:
+                <span id="contadorEquipos">0</span>
+            </div>
+
         </div>
 
         <!-- Observaciones -->
@@ -180,8 +185,10 @@
         <div class="card">
 
             <button
+                id="btnRegistrarEntrega"
                 class="btnVerde"
-                onclick="App.registrarEntrega()">
+                onclick="App.registrarEntrega()"
+                disabled>
 
                 Registrar Entrega
 
