@@ -4,9 +4,9 @@
 
 <head>
 
-  <base target="_top">
+<base target="_top">
 
-  <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+<?!= include("firma_css"); ?>
 
 </head>
 
@@ -14,37 +14,25 @@
 
 <div class="contenedor">
 
-    <header>
+<div class="card">
 
-        <div class="logo">
+<h1 id="tituloActa">
 
-            <h1>Firma Digital</h1>
+Cargando...
 
-            <span>IBCL Asset Manager</span>
+</h1>
 
-        </div>
+<div id="contenido">
 
-    </header>
-
-    <main>
-
-        <div class="card">
-
-            <h2>Validando solicitud...</h2>
-
-            <div id="contenido">
-
-                Espere un momento...
-
-            </div>
-
-        </div>
-
-    </main>
+Cargando información...
 
 </div>
 
-<?!= HtmlService.createHtmlOutputFromFile('firma_js').getContent(); ?>
+</div>
+
+</div>
+
+<?!= include("firma_js"); ?>
 
 </body>
 

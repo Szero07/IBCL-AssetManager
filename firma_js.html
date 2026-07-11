@@ -1,79 +1,25 @@
-<script>
+const Firma={
 
-const token=new URLSearchParams(
+    token:null,
 
-    window.location.search
+    solicitud:null,
 
-).get("token");
+    iniciar(){},
 
-window.onload=()=>{
+    cargar(){},
 
-    if(!token){
+    dibujarPantalla(){},
 
-        document.getElementById("contenido").innerHTML=
+    inicializarCanvas(){},
 
-            "<b>Solicitud inválida.</b>";
+    limpiar(){},
 
-        return;
-
-    }
-
-    google.script.run
-
-    .withSuccessHandler(cargarSolicitud)
-
-    .obtenerSolicitud(token);
+    firmar(){}
 
 };
 
-function cargarSolicitud(solicitud){
+window.onload=()=>{
 
-    if(!solicitud){
+    Firma.iniciar();
 
-        document.getElementById("contenido").innerHTML=
-
-            "<b>La solicitud no existe.</b>";
-
-        return;
-
-    }
-
-    document.getElementById("contenido").innerHTML=`
-
-        <p>
-
-            <b>Empleado:</b>
-
-            ${solicitud.empleado}
-
-        </p>
-
-        <p>
-
-            <b>Documento:</b>
-
-            ${solicitud.cedula}
-
-        </p>
-
-        <p>
-
-            <b>Tipo:</b>
-
-            ${solicitud.tipo}
-
-        </p>
-
-        <hr>
-
-        <p>
-
-            La siguiente pantalla permitirá realizar la firma.
-
-        </p>
-
-    `;
-
-}
-
-</script>
+};
