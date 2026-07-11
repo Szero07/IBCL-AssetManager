@@ -1,25 +1,194 @@
-const Firma={
+<script>
 
-    token:null,
+const Firma = {
 
-    solicitud:null,
+    token: null,
 
-    iniciar(){},
+    solicitud: null,
 
-    cargar(){},
+    iniciar() {
 
-    dibujarPantalla(){},
+        this.token = new URLSearchParams(window.location.search).get("token");
 
-    inicializarCanvas(){},
+        if (!this.token) {
 
-    limpiar(){},
+            document.getElementById("contenido").innerHTML =
+                "<h2>Solicitud inválida.</h2>";
 
-    firmar(){}
+            return;
+
+        }
+
+        this.cargar();
+
+    },
+
+    cargar() {
+
+        google.script.run
+
+        .withSuccessHandler((solicitud) => {
+
+            if (!solicitud) {
+
+                document.getElementById("contenido").innerHTML =
+                    "<h2>La solicitud no existe.</h2>";
+
+                return;
+
+            }
+
+            this.solicitud = solicitud;
+
+            this.dibujarPantalla();
+
+        })
+
+        .withFailureHandler((e) => {
+
+            document.getElementById("contenido").innerHTML =
+                "<h2>" + e.message + "</h2>";
+
+        })
+
+        .obtenerSolicitud(this.token);
+
+    },
+
+    dibujarPantalla() {
+
+        const datos = this.solicitud.datos;
+
+        document.getElementById("tituloActa").innerHTML =
+            "ACTA DE " + this.solicitud.tipo;
+
+        let html = "";
+
+        html += `
+            <label>Empleado</label>
+            <div>${datos.empleado.nombre}</div>
+
+            <label>Cédula</label>
+            <div>${datos.empleado.cedula}</div>
+
+            <label>Cargo</label>
+            <div>${datos.empleado.cargo}</div>
+
+            <label>Ubicación</label>
+            <div>${datos.empleado.ubicacion}</div>
+
+            <label>Equipos</label>
+
+            <ul class="listaEquipos">
+        `;
+
+        datos.equipos.forEach(eq => {
+
+            html += `
+                <li>
+
+                    ${eq.id}
+
+                    -
+
+                    ${eq.descripcion}
+
+                </li>
+            `;
+
+        });
+
+        html += "</ul>";
+
+        html += `
+
+            <label>Observaciones</label>
+
+            <div>
+
+                ${datos.observaciones || "Sin observaciones."}
+
+            </div>
+
+            <hr style="margin:30px 0;">
+
+            <button
+                id="btnContinuar">
+
+                Revisé la información y deseo firmar
+
+            </button>
+
+        `;
+
+        document.getElementById("contenido").innerHTML = html;
+
+        document
+            .getElementById("btnContinuar")
+            .onclick = () => this.mostrarCanvas();
+
+    },
+
+    mostrarCanvas() {
+
+        document.getElementById("contenido").innerHTML = `
+
+            <h2>
+
+                Firma Digital
+
+            </h2>
+
+            <p>
+
+                Firme dentro del recuadro.
+
+            </p>
+
+            <canvas id="canvasFirma"></canvas>
+
+            <div class="botones">
+
+                <button id="btnLimpiar">
+
+                    Limpiar
+
+                </button>
+
+                <button id="btnFirmar">
+
+                    Firmar
+
+                </button>
+
+            </div>
+
+        `;
+
+        this.inicializarCanvas();
+
+    },
+
+    inicializarCanvas() {
+
+        // Lo construiremos en el siguiente sprint
+
+    },
+
+    limpiar() {
+
+    },
+
+    firmar() {
+
+    }
 
 };
 
-window.onload=()=>{
+window.onload = () => {
 
     Firma.iniciar();
 
 };
+
+</script>
