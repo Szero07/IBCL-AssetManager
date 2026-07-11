@@ -9,7 +9,9 @@ const CONFIG = {
 
     PERSONAL:"Personal",
 
-    MOVIMIENTOS:"Movimientos"
+    MOVIMIENTOS:"Movimientos",
+
+    SOLICITUDES:"SolicitudesFirma"
 
   }
 
