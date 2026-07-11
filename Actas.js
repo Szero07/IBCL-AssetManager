@@ -7,63 +7,88 @@
 
 const Actas = (() => {
 
-    /**
-     * Obtiene la primera tabla del documento
-     */
-    function obtenerTabla(doc){
+  /**
+   * Obtiene la primera tabla del documento
+   */
+  function obtenerTabla(doc) {
 
-        const body = doc.getBody();
+    const body = doc.getBody();
 
-        const tablas = body.getTables();
+    const tablas = body.getTables();
 
-        if(tablas.length==0){
+    if (tablas.length === 0) {
 
-            throw new Error(
-
-                "La plantilla no contiene tablas."
-
-            );
-
-        }
-
-        return tablas[0];
+      throw new Error(
+        "La plantilla no contiene tablas."
+      );
 
     }
 
-    /**
-     * Agregar equipos
-     */
-    function llenarTabla(doc,equipos){
+    return tablas[0];
 
-        const tabla = obtenerTabla(doc);
+  }
 
-        equipos.forEach(eq=>{
+  /**
+   * Llena la tabla de equipos
+   */
+  function llenarTabla(doc, equipos) {
 
-            const fila = tabla.appendTableRow();
+    const tabla = obtenerTabla(doc);
 
-            fila.appendTableCell(eq.id || "");
+    equipos.forEach(eq => {
 
-            fila.appendTableCell(eq.descripcion || "");
+      const fila = tabla.appendTableRow();
 
-            fila.appendTableCell(eq.marca || "");
+      fila.appendTableCell(eq.id || "");
 
-            fila.appendTableCell(eq.modelo || "");
+      fila.appendTableCell(eq.descripcion || "");
 
-            fila.appendTableCell(eq.serial || "");
+      fila.appendTableCell(eq.marca || "");
 
-            fila.appendTableCell(eq.observaciones || "");
+      fila.appendTableCell(eq.modelo || "");
 
-        });
+      fila.appendTableCell(eq.serial || "");
 
-        return doc;
+      fila.appendTableCell(eq.observaciones || "");
 
-    }
+    });
 
-    return{
+    return doc;
 
-        llenarTabla
+  }
+
+  /**
+   * Construye el objeto de variables
+   */
+  function obtenerVariables(datos) {
+
+    return {
+
+      TIPO: datos.tipo || "",
+
+      FECHA: datos.fecha || "",
+
+      EMPLEADO: datos.empleado.nombre || "",
+
+      CEDULA: datos.empleado.cedula || "",
+
+      CARGO: datos.empleado.cargo || "",
+
+      UBICACION: datos.empleado.ubicacion || "",
+
+      OBSERVACIONES: datos.observaciones || ""
 
     };
+
+  }
+
+  return {
+
+    llenarTabla,
+
+    obtenerVariables
+
+  };
 
 })();
 
@@ -72,15 +97,17 @@ const Actas = (() => {
 
 
 
+function llenarTablaEquipos(doc, equipos) {
 
-function llenarTablaEquipos(doc,equipos){
+  return Actas.llenarTabla(
+    doc,
+    equipos
+  );
 
-    return Actas.llenarTabla(
+}
 
-        doc,
+function obtenerVariablesActa(datos) {
 
-        equipos
-
-    );
+  return Actas.obtenerVariables(datos);
 
 }
