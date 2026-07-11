@@ -1,0 +1,79 @@
+<script>
+
+const token=new URLSearchParams(
+
+    window.location.search
+
+).get("token");
+
+window.onload=()=>{
+
+    if(!token){
+
+        document.getElementById("contenido").innerHTML=
+
+            "<b>Solicitud inválida.</b>";
+
+        return;
+
+    }
+
+    google.script.run
+
+    .withSuccessHandler(cargarSolicitud)
+
+    .obtenerSolicitud(token);
+
+};
+
+function cargarSolicitud(solicitud){
+
+    if(!solicitud){
+
+        document.getElementById("contenido").innerHTML=
+
+            "<b>La solicitud no existe.</b>";
+
+        return;
+
+    }
+
+    document.getElementById("contenido").innerHTML=`
+
+        <p>
+
+            <b>Empleado:</b>
+
+            ${solicitud.empleado}
+
+        </p>
+
+        <p>
+
+            <b>Documento:</b>
+
+            ${solicitud.cedula}
+
+        </p>
+
+        <p>
+
+            <b>Tipo:</b>
+
+            ${solicitud.tipo}
+
+        </p>
+
+        <hr>
+
+        <p>
+
+            La siguiente pantalla permitirá realizar la firma.
+
+        </p>
+
+    `;
+
+}
+
+</script>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <header>
+
+        <div class="logo">
+
+            <h1>Firma Digital</h1>
+
+            <span>IBCL Asset Manager</span>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <div class="card">
+
+            <h2>Validando solicitud...</h2>
+
+            <div id="contenido">
+
+                Espere un momento...
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<?!= HtmlService.createHtmlOutputFromFile('firma_js').getContent(); ?>
+
+</body>
+
+</html>
