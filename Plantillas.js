@@ -5,56 +5,78 @@
  * ============================================================
  */
 
-const Plantillas = (()=>{
+const Plantillas = (() => {
 
-    /**
-     * Crear copia temporal
-     */
-    function copiarActa(){
+  /**
+   * Crear copia temporal de la plantilla
+   */
+  function copiar() {
 
-        const archivo = DriveApp
+    const archivo = DriveApp
+      .getFileById(CONFIG.PLANTILLAS.ACTA);
 
-            .getFileById(
+    const copia = archivo.makeCopy(
+      "TMP_" + Utilities.getUuid()
+    );
 
-                CONFIG.PLANTILLAS.ACTA
+    return DocumentApp.openById(
+      copia.getId()
+    );
 
-            );
+  }
 
-        const copia = archivo.makeCopy(
+  /**
+   * Reemplazar marcadores
+   */
+  function reemplazar(doc, variables) {
 
-            "TMP_"+Utilities.getUuid()
+    const body = doc.getBody();
 
-        );
+    Object.keys(variables).forEach(clave => {
 
-        return{
+      body.replaceText(
 
-            id:copia.getId(),
+        "{{" + clave + "}}",
 
-            documento:DocumentApp.openById(
+        variables[clave] ?? ""
 
-                copia.getId()
+      );
 
-            )
+    });
 
-        };
+    doc.saveAndClose();
 
-    }
+    return doc;
 
-    return{
+  }
 
-        copiarActa
+  return {
 
-    };
+    copiar,
+
+    reemplazar
+
+  };
 
 })();
 
 
 
 
+function copiarPlantilla(){
 
+  return Plantillas.copiar();
 
-function copiarPlantillaActa(){
+}
 
-    return Plantillas.copiarActa();
+function reemplazarVariables(doc, variables){
+
+  return Plantillas.reemplazar(
+
+      doc,
+
+      variables
+
+  );
 
 }
