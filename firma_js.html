@@ -171,15 +171,155 @@ const Firma = {
 
     inicializarCanvas() {
 
-        // Lo construiremos en el siguiente sprint
+        const canvas = document.getElementById("canvasFirma");
+
+        const ctx = canvas.getContext("2d");
+
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.width = rect.width;
+
+        canvas.height = rect.height;
+
+        ctx.lineWidth = 2;
+
+        ctx.lineCap = "round";
+
+        ctx.strokeStyle = "#000";
+
+        let dibujando = false;
+
+        let firmo = false;
+
+        this.canvas = canvas;
+
+        this.ctx = ctx;
+
+        this.firmo = false;
+
+        const obtenerPosicion = (e) => {
+
+            if (e.touches) {
+
+                return {
+
+                    x: e.touches[0].clientX - rect.left,
+
+                    y: e.touches[0].clientY - rect.top
+
+                };
+
+            }
+
+            return {
+
+                x: e.offsetX,
+
+                y: e.offsetY
+
+            };
+
+        };
+
+        const iniciar = (e) => {
+
+            dibujando = true;
+
+            firmo = true;
+
+            this.firmo = true;
+
+            const p = obtenerPosicion(e);
+
+            ctx.beginPath();
+
+            ctx.moveTo(p.x, p.y);
+
+        };
+
+        const mover = (e) => {
+
+            if (!dibujando) return;
+
+            e.preventDefault();
+
+            const p = obtenerPosicion(e);
+
+            ctx.lineTo(p.x, p.y);
+
+            ctx.stroke();
+
+        };
+
+        const finalizar = () => {
+
+            dibujando = false;
+
+        };
+
+        canvas.addEventListener("mousedown", iniciar);
+
+        canvas.addEventListener("mousemove", mover);
+
+        canvas.addEventListener("mouseup", finalizar);
+
+        canvas.addEventListener("mouseleave", finalizar);
+
+        canvas.addEventListener("touchstart", iniciar);
+
+        canvas.addEventListener("touchmove", mover);
+
+        canvas.addEventListener("touchend", finalizar);
+
+        document.getElementById("btnLimpiar")
+
+            .onclick = () => this.limpiar();
+
+        document.getElementById("btnFirmar")
+
+            .onclick = () => this.firmar();
 
     },
 
     limpiar() {
 
+        this.ctx.clearRect(
+
+            0,
+
+            0,
+
+            this.canvas.width,
+
+            this.canvas.height
+
+        );
+
+        this.firmo = false;
+
     },
 
     firmar() {
+
+        if (!this.firmo) {
+
+            alert("Debe realizar la firma antes de continuar.");
+
+            return;
+
+        }
+
+        const base64 = this.canvas.toDataURL("image/png");
+
+        console.log(base64);
+
+        alert(
+
+            "Firma capturada correctamente.\n\n" +
+
+            "En el siguiente sprint será enviada al servidor."
+
+        );
 
     }
 

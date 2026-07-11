@@ -18,8 +18,20 @@ const CONFIG = {
 
   FIRMAS:{
 
-  CARPETA_ID:"1j8j2v2Zg4bIOUX4w6EKb7b9jriQBHWLv"
+    CARPETA_ID:"1j8j2v2Zg4bIOUX4w6EKb7b9jriQBHWLv"
 
-}
+  },
+
+  PLANTILLAS:{
+
+      ACTA:"1hW_KmYOg35hVv6SwOudvHRc4Vf7SidoGwHSdAlvvlsY"
+
+  },
+
+  PDF:{
+
+      CARPETA_ID:"1xPjQiXJ6suwwEa4ZeO9OdeWsjK2TvwXO"
+
+  }
 
 };
