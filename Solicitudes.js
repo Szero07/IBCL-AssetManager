@@ -147,6 +147,27 @@ const Solicitudes = (() => {
 
   }
 
+  /**
+     * Guarda el PDF generado
+     */
+    function guardarPDF(token, pdf){
+
+        const solicitud = buscar(token);
+
+        if(!solicitud){
+
+            throw new Error("La solicitud no existe.");
+
+        }
+
+        hoja().getRange(solicitud.fila,9).setValue(pdf.id);
+
+        solicitud.pdf = pdf.id;
+
+        return solicitud;
+
+    }
+
   return {
 
     crear,
@@ -154,6 +175,8 @@ const Solicitudes = (() => {
     buscar,
 
     firmar,
+
+    guardarPDF,
 
     procesarFirma
 
@@ -188,5 +211,17 @@ function registrarFirmaSolicitud(token, firma) {
 function procesarFirma(token, base64) {
 
   return Solicitudes.procesarFirma(token, base64);
+
+}
+
+function guardarPDFSolicitud(token,pdf){
+
+    return Solicitudes.guardarPDF(
+
+        token,
+
+        pdf
+
+    );
 
 }

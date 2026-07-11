@@ -63,9 +63,66 @@ const PDF = (() => {
 
     }
 
+    /**
+ * Genera el PDF completo de una acta
+ */
+    function generar(token){
+
+        const solicitud = Solicitudes.buscar(token);
+
+        if(!solicitud){
+
+            throw new Error("Solicitud no encontrada.");
+
+        }
+
+        const doc = Plantillas.copiar();
+
+        Plantillas.reemplazar(
+
+            doc,
+
+            Actas.obtenerVariables(
+
+                solicitud.datos
+
+            )
+
+        );
+
+        Actas.llenarTabla(
+
+            doc,
+
+            solicitud.datos.equipos
+
+        );
+
+        const pdf = exportar(
+
+            doc,
+
+            token
+
+        );
+
+        Solicitudes.guardarPDF(
+
+            token,
+
+            pdf
+
+        );
+
+        return pdf;
+
+    }
+
     return{
 
-        exportar
+        exportar,
+
+        generar
 
     };
 
@@ -81,6 +138,16 @@ function exportarPDF(doc,nombre){
         doc,
 
         nombre
+
+    );
+
+}
+
+function generarPDFActa(token){
+
+    return PDF.generar(
+
+        token
 
     );
 
