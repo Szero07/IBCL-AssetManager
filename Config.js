@@ -13,6 +13,13 @@ const CONFIG = {
 
     SOLICITUDES:"SolicitudesFirma"
 
-  }
+  },
+
+
+  FIRMAS:{
+
+  CARPETA_ID:"1j8j2v2Zg4bIOUX4w6EKb7b9jriQBHWLv"
+
+}
 
 };
