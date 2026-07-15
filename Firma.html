@@ -1,12 +1,193 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
 
-<base target="_top">
+    <base target="_top">
 
-<?!= include("firma_css"); ?>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Firma de Acta</title>
+
+    <style>
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,Helvetica,sans-serif;
+
+        }
+
+        body{
+
+            background:#f4f6f8;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            min-height:100vh;
+
+        }
+
+        .contenedor{
+
+            width:95%;
+
+            max-width:900px;
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:0 5px 20px rgba(0,0,0,.15);
+
+            padding:30px;
+
+        }
+
+        h1{
+
+            color:#1565C0;
+
+            margin-bottom:10px;
+
+        }
+
+        p{
+
+            color:#666;
+
+            margin-bottom:25px;
+
+        }
+
+        #panelFirma{
+
+            border:2px dashed #1565C0;
+
+            border-radius:10px;
+
+            overflow:hidden;
+
+            background:white;
+
+        }
+
+        canvas{
+
+            width:100%;
+
+            height:350px;
+
+            display:block;
+
+            touch-action:none;
+
+            cursor:crosshair;
+
+        }
+
+        .botones{
+
+            display:flex;
+
+            justify-content:flex-end;
+
+            gap:15px;
+
+            margin-top:20px;
+
+        }
+
+        button{
+
+            border:none;
+
+            padding:14px 28px;
+
+            border-radius:8px;
+
+            cursor:pointer;
+
+            color:white;
+
+            font-size:15px;
+
+            transition:.2s;
+
+        }
+
+        #btnLimpiar{
+
+            background:#E53935;
+
+        }
+
+        #btnLimpiar:hover{
+
+            background:#C62828;
+
+        }
+
+        #btnGuardar{
+
+            background:#43A047;
+
+        }
+
+        #btnGuardar:hover{
+
+            background:#2E7D32;
+
+        }
+
+        #estado{
+
+            margin-top:25px;
+
+            padding:15px;
+
+            display:none;
+
+            border-radius:8px;
+
+            background:#E3F2FD;
+
+            color:#1565C0;
+
+        }
+
+        @media(max-width:700px){
+
+            canvas{
+
+                height:260px;
+
+            }
+
+            .botones{
+
+                flex-direction:column;
+
+            }
+
+            button{
+
+                width:100%;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -14,25 +195,85 @@
 
 <div class="contenedor">
 
-<div class="card">
+    <h1>Firma del Acta</h1>
 
-<h1 id="tituloActa">
+    <p>
 
-Cargando...
+        Lea el documento previamente y firme en el espacio inferior.
 
-</h1>
+    </p>
 
-<div id="contenido">
+    <div id="panelFirma">
 
-Cargando información...
+        <canvas id="canvasFirma"></canvas>
+
+    </div>
+
+    <div class="botones">
+
+        <button id="btnLimpiar">
+
+            Limpiar
+
+        </button>
+
+        <button id="btnGuardar">
+
+            Guardar Firma
+
+        </button>
+
+    </div>
+
+    <div id="estado">
+
+        Preparando...
+
+    </div>
 
 </div>
 
-</div>
+<script>
 
-</div>
+const token = new URLSearchParams(
 
-<?!= include("firma_js"); ?>
+    window.location.search
+
+).get("token");
+
+const canvas = document.getElementById("canvasFirma");
+
+const ctx = canvas.getContext("2d");
+
+function ajustarCanvas(){
+
+    const rect = canvas.getBoundingClientRect();
+
+    canvas.width = rect.width;
+
+    canvas.height = rect.height;
+
+}
+
+window.addEventListener(
+
+    "resize",
+
+    ajustarCanvas
+
+);
+
+ajustarCanvas();
+
+document
+    .getElementById("estado")
+    .style.display="block";
+
+document
+    .getElementById("estado")
+    .innerHTML="Solicitud: "+token;
+
+</script>
 
 </body>
 
