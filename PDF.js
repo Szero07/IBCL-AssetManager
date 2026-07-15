@@ -64,8 +64,8 @@ const PDF = (() => {
     }
 
     /**
- * Genera el PDF completo de una acta
- */
+     * Genera el PDF completo de una acta
+     */
     function generar(token){
 
         const solicitud = Solicitudes.buscar(token);
@@ -76,7 +76,19 @@ const PDF = (() => {
 
         }
 
-        const doc = Plantillas.copiar();
+        //---------------------------------------------------
+        // Copiar plantilla según el tipo
+        //---------------------------------------------------
+
+        const doc = Plantillas.copiar(
+
+            solicitud.tipo
+
+        );
+
+        //---------------------------------------------------
+        // Reemplazar variables
+        //---------------------------------------------------
 
         Plantillas.reemplazar(
 
@@ -90,6 +102,10 @@ const PDF = (() => {
 
         );
 
+        //---------------------------------------------------
+        // Llenar tabla
+        //---------------------------------------------------
+
         Actas.llenarTabla(
 
             doc,
@@ -98,6 +114,32 @@ const PDF = (() => {
 
         );
 
+        //---------------------------------------------------
+        // Insertar firmas
+        //---------------------------------------------------
+
+        Actas.insertarFirmas(
+
+            doc,
+
+            solicitud
+
+        );
+
+        //---------------------------------------------------
+        // Guardar documento
+        //---------------------------------------------------
+
+        Plantillas.guardar(
+
+            doc
+
+        );
+
+        //---------------------------------------------------
+        // Exportar PDF
+        //---------------------------------------------------
+
         const pdf = exportar(
 
             doc,
@@ -105,6 +147,10 @@ const PDF = (() => {
             token
 
         );
+
+        //---------------------------------------------------
+        // Registrar PDF
+        //---------------------------------------------------
 
         Solicitudes.guardarPDF(
 
