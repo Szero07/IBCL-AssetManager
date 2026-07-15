@@ -26,7 +26,9 @@ const CONFIG = {
 
   PLANTILLAS:{
 
-      ACTA:"1hW_KmYOg35hVv6SwOudvHRc4Vf7SidoGwHSdAlvvlsY"
+      ENTREGA:"1hW_KmYOg35hVv6SwOudvHRc4Vf7SidoGwHSdAlvvlsY",
+
+      DEVOLUCION:"14uvSYLaCoWo1Hbpzs8R6EWhcRWp114kJqyhLL_QNAgE"
 
   },
 

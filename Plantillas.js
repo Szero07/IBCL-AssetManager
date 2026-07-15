@@ -8,19 +8,41 @@
 const Plantillas = (() => {
 
   /**
-   * Crear copia temporal de la plantilla
+   * Obtiene el ID de la plantilla según el tipo
    */
-  function copiar() {
+  function obtenerPlantilla(tipo){
 
-    const archivo = DriveApp
-      .getFileById(CONFIG.PLANTILLAS.ACTA);
+    if(String(tipo).toUpperCase() == "DEVOLUCION"){
+
+      return CONFIG.PLANTILLAS.DEVOLUCION;
+
+    }
+
+    return CONFIG.PLANTILLAS.ENTREGA;
+
+  }
+
+  /**
+   * Crear copia temporal
+   */
+  function copiar(tipo){
+
+    const archivo = DriveApp.getFileById(
+
+      obtenerPlantilla(tipo)
+
+    );
 
     const copia = archivo.makeCopy(
+
       "TMP_" + Utilities.getUuid()
+
     );
 
     return DocumentApp.openById(
+
       copia.getId()
+
     );
 
   }
@@ -28,22 +50,21 @@ const Plantillas = (() => {
   /**
    * Reemplazar marcadores
    */
-  function reemplazar(doc, variables) {
+  function reemplazar(doc,variables){
 
     const body = doc.getBody();
 
-    Object.keys(variables).forEach(clave => {
+    Object.keys(variables).forEach(clave=>{
 
       body.replaceText(
-        "{{" + clave + "}}",
+
+        "{{"+clave+"}}",
+
         variables[clave] ?? ""
+
       );
 
     });
-
-    // IMPORTANTE:
-    // NO cerramos el documento aquí.
-    // Actas continuará modificándolo.
 
     return doc;
 
@@ -60,7 +81,7 @@ const Plantillas = (() => {
 
   }
 
-  return {
+  return{
 
     copiar,
 
@@ -76,17 +97,21 @@ const Plantillas = (() => {
 
 
 
-function copiarPlantilla(){
 
-  return Plantillas.copiar();
+function copiarPlantilla(tipo){
+
+  return Plantillas.copiar(tipo);
 
 }
 
-function reemplazarVariables(doc, variables){
+function reemplazarVariables(doc,variables){
 
   return Plantillas.reemplazar(
-      doc,
-      variables
+
+    doc,
+
+    variables
+
   );
 
 }
