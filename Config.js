@@ -40,7 +40,7 @@ const CONFIG = {
 
   WEBAPP:{
 
-      URL:"https://script.google.com/macros/s/AKfycbwcldBwLljdSClhTeaIcRnKHryPvnMds-of_znC0-0ejfkQ9Wq_gV5U6gmGKZwfA9NX_w/exec"
+      URL:"https://script.google.com/macros/s/AKfycbz3nSkFTNrv1n-paBUb2waNWNjg6ziu1ziqtd9A8EcIuKCyB6uJNPYSSFI6Kj9QABCJ0A/exec"
 
   }
 
