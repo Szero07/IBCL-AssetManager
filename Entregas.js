@@ -2,18 +2,23 @@
  * ============================================================
  * IBCL Asset Manager
  * Módulo: Entregas
- * Versión: 1.0.0
+ * Versión: 2.0.0
  * ============================================================
  */
 
 const Entregas = (() => {
 
   /**
-   * Registrar una entrega
+   * Inicia una entrega.
+   * No modifica la BD todavía.
    */
   function registrar(datos){
 
-    const empleado = Personal.obtenerPorId(datos.empleadoId);
+    const empleado = Personal.obtenerPorId(
+
+      datos.empleadoId
+
+    );
 
     if(!empleado){
 
@@ -27,11 +32,15 @@ const Entregas = (() => {
 
     }
 
-    let entregados = 0;
+    //-----------------------------------------
+    // Validar equipos
+    //-----------------------------------------
 
-    for(const idEquipo of datos.equipos){
+    const equipos=[];
 
-      const equipo = Equipos.buscar(idEquipo);
+    for(const id of datos.equipos){
+
+      const equipo=Equipos.buscar(id);
 
       if(!equipo){
 
@@ -45,33 +54,109 @@ const Entregas = (() => {
 
       }
 
-      Equipos.entregar(
-
-        idEquipo,
-
-        empleado
-
-      );
-
-      Movimientos.registrarEntrega(
-
-        equipo,
-
-        empleado
-
-      );
-
-      entregados++;
+      equipos.push(equipo);
 
     }
+
+    if(equipos.length==0){
+
+      return{
+
+        ok:false,
+
+        mensaje:"No existen equipos disponibles."
+
+      };
+
+    }
+
+    //-----------------------------------------
+    // Crear solicitud de firma
+    //-----------------------------------------
+
+    const token = Solicitudes.crear({
+
+      tipo:"ENTREGA",
+
+      fecha:new Date(),
+
+      empleado:empleado,
+
+      equipos:equipos,
+
+      observaciones:datos.observaciones || ""
+
+    });
 
     return{
 
       ok:true,
 
-      cantidad:entregados,
+      token:token,
 
-      mensaje:"Entrega realizada correctamente."
+      mensaje:"Solicitud creada correctamente."
+
+    };
+
+  }
+
+  /**
+   * Finaliza la entrega
+   * Se ejecuta después de la firma.
+   */
+  function finalizar(token){
+
+    const solicitud = Solicitudes.buscar(token);
+
+    if(!solicitud){
+
+      throw new Error(
+
+        "Solicitud no encontrada."
+
+      );
+
+    }
+
+    const datos = solicitud.datos;
+
+    //-----------------------------------------
+    // PDF
+    //-----------------------------------------
+
+    const pdf = PDF.generar(token);
+
+    //-----------------------------------------
+    // Actualizar equipos
+    //-----------------------------------------
+
+    datos.equipos.forEach(eq=>{
+
+      Equipos.entregar(
+
+        eq.id,
+
+        datos.empleado
+
+      );
+
+      Movimientos.registrarEntrega(
+
+        eq,
+
+        datos.empleado
+
+      );
+
+    });
+
+    return{
+
+      ok:true,
+
+      pdf:pdf,
+
+      mensaje:"Entrega registrada correctamente."
 
     };
 
@@ -79,7 +164,9 @@ const Entregas = (() => {
 
   return{
 
-    registrar
+    registrar,
+
+    finalizar
 
   };
 
@@ -88,8 +175,15 @@ const Entregas = (() => {
 
 
 
+
 function registrarEntrega(datos){
 
   return Entregas.registrar(datos);
+
+}
+
+function finalizarEntrega(token){
+
+  return Entregas.finalizar(token);
 
 }
