@@ -4,6 +4,8 @@ const Entrega={
 
     empleado:null,
 
+    urlWebApp:null,
+
     equipos:[],
 
     cargarPersonal(){
@@ -42,6 +44,14 @@ const Entrega={
             }
 
         });
+
+        google.script.run
+        .withSuccessHandler(url=>{
+
+            this.urlWebApp=url;
+
+        })
+        .obtenerURLWebApp();
 
     },
 
@@ -193,7 +203,7 @@ const Entrega={
 
         }
 
-        if(this.equipos.length==0){
+        if(this.equipos.length===0){
 
             alert("Debe agregar al menos un equipo.");
 
@@ -205,25 +215,58 @@ const Entrega={
 
             empleadoId:this.empleado.id,
 
-            equipos:this.equipos.map(e=>e.id)
+            equipos:this.equipos.map(e=>e.id),
+
+            observaciones:document
+                .getElementById("observaciones")
+                .value
+                .trim()
 
         };
 
+        const boton=document.getElementById("btnRegistrarEntrega");
+
+        boton.disabled=true;
+
+        boton.innerHTML="Creando solicitud...";
+
         google.script.run
 
-        .withSuccessHandler(resultado=>{
+            .withSuccessHandler((resultado)=>{
 
-            alert(resultado.mensaje);
+                if(!resultado.ok){
 
-            if(resultado.ok){
+                    boton.disabled=false;
 
-                this.limpiar();
+                    boton.innerHTML="Registrar Entrega";
 
-            }
+                    alert(resultado.mensaje);
 
-        })
+                    return;
 
-        .registrarEntrega(datos);
+                }
+
+                window.location.href =
+
+                    this.urlWebApp +
+
+                    "?token=" +
+
+                    resultado.token;
+
+            })
+
+            .withFailureHandler((error)=>{
+
+                boton.disabled=false;
+
+                boton.innerHTML="Registrar Entrega";
+
+                alert(error.message);
+
+            })
+
+            .registrarEntrega(datos);
 
     },
 

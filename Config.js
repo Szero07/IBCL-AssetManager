@@ -36,6 +36,12 @@ const CONFIG = {
 
       CARPETA_ID:"1xPjQiXJ6suwwEa4ZeO9OdeWsjK2TvwXO"
 
+  },
+
+  WEBAPP:{
+
+      URL:"https://script.google.com/macros/s/AKfycbwcldBwLljdSClhTeaIcRnKHryPvnMds-of_znC0-0ejfkQ9Wq_gV5U6gmGKZwfA9NX_w/exec"
+
   }
 
 };

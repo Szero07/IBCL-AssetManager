@@ -50,3 +50,9 @@ function cargarVista(nombre){
           .getContent();
 
 }
+
+function obtenerURLWebApp(){
+
+  return CONFIG.WEBAPP.URL;
+
+}
