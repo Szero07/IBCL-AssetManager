@@ -234,6 +234,8 @@ const Entrega={
 
             .withSuccessHandler((resultado)=>{
 
+                alert("TOKEN: " + resultado.token);
+
                 if(!resultado.ok){
 
                     boton.disabled=false;
