@@ -413,23 +413,109 @@ document
 
     if(!hayFirma){
 
-        alert(
-
-            "Debe realizar una firma."
-
-        );
+        alert("Debe realizar una firma.");
 
         return;
 
     }
 
+    document.getElementById("btnGuardar").disabled=true;
+    document.getElementById("btnLimpiar").disabled=true;
+
     estado.style.display="block";
 
-    estado.innerHTML=
+    estado.innerHTML="Guardando firma...";
 
-        "Procesando firma...";
+    const base64 = canvas.toDataURL("image/png");
+
+    google.script.run
+
+        .withSuccessHandler(function(){
+
+            estado.innerHTML="Generando acta...";
+
+            google.script.run
+
+                .withSuccessHandler(finalizarProceso)
+
+                .withFailureHandler(errorProceso)
+
+                .finalizarEntrega(token);
+
+        })
+
+        .withFailureHandler(errorProceso)
+
+        .procesarFirma(
+
+            token,
+
+            base64
+
+        );
 
 });
+
+
+function finalizarProceso(respuesta){
+
+    estado.innerHTML=`
+
+        <h3 style="color:green;">
+
+            ✔ Acta generada correctamente
+
+        </h3>
+
+        <br>
+
+        <a href="${respuesta.pdf.url}"
+
+           target="_blank">
+
+           Abrir PDF
+
+        </a>
+
+        <br><br>
+
+        <button onclick="volver()">
+
+            Finalizar
+
+        </button>
+
+    `;
+
+}
+
+function errorProceso(error){
+
+    document.getElementById("btnGuardar").disabled=false;
+
+    document.getElementById("btnLimpiar").disabled=false;
+
+    estado.innerHTML=`
+
+        <span style="color:red;">
+
+            ${error.message}
+
+        </span>
+
+    `;
+
+}
+
+function volver(){
+
+    window.location.href=
+
+        window.location.origin+
+
+        window.location.pathname;
+
+}
 
 /*=========================================
   Inicializar
