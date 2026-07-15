@@ -235,7 +235,13 @@
 
 <script>
 
-const token = new URLSearchParams(window.location.search).get("token");
+const token = "<?= token ?>";
+
+if(!token){
+
+    alert("No se recibió el token de la solicitud.");
+
+}
 
 const canvas = document.getElementById("canvasFirma");
 const ctx = canvas.getContext("2d");

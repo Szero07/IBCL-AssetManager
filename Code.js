@@ -2,19 +2,16 @@ function doGet(e){
 
   if(e.parameter.token){
 
-    return HtmlService
+      const html = HtmlService.createTemplateFromFile("firma");
 
-      .createTemplateFromFile("firma")
+      html.token = e.parameter.token;
 
-      .evaluate()
-
-      .setTitle("Firma de Acta")
-
-      .setXFrameOptionsMode(
-
-        HtmlService.XFrameOptionsMode.ALLOWALL
-
-      );
+      return html
+          .evaluate()
+          .setTitle("Firma de Acta")
+          .setXFrameOptionsMode(
+              HtmlService.XFrameOptionsMode.ALLOWALL
+          );
 
   }
 
