@@ -18,7 +18,9 @@ const CONFIG = {
 
   FIRMAS:{
 
-    CARPETA_ID:"1j8j2v2Zg4bIOUX4w6EKb7b9jriQBHWLv"
+    CARPETA_ID:"1j8j2v2Zg4bIOUX4w6EKb7b9jriQBHWLv",
+
+    FIRMA_TI:"12xw6Hdsi2vpE2K-L0kliu7MP5tukmywl"
 
   },
 

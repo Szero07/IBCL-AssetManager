@@ -35,18 +35,28 @@ const Plantillas = (() => {
     Object.keys(variables).forEach(clave => {
 
       body.replaceText(
-
         "{{" + clave + "}}",
-
         variables[clave] ?? ""
-
       );
 
     });
 
-    doc.saveAndClose();
+    // IMPORTANTE:
+    // NO cerramos el documento aquí.
+    // Actas continuará modificándolo.
 
     return doc;
+
+  }
+
+  /**
+   * Guardar documento
+   */
+  function guardar(doc){
+
+    doc.saveAndClose();
+
+    return true;
 
   }
 
@@ -54,11 +64,14 @@ const Plantillas = (() => {
 
     copiar,
 
-    reemplazar
+    reemplazar,
+
+    guardar
 
   };
 
 })();
+
 
 
 
@@ -72,11 +85,14 @@ function copiarPlantilla(){
 function reemplazarVariables(doc, variables){
 
   return Plantillas.reemplazar(
-
       doc,
-
       variables
-
   );
+
+}
+
+function guardarPlantilla(doc){
+
+  return Plantillas.guardar(doc);
 
 }
