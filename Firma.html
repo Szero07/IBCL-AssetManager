@@ -235,15 +235,19 @@
 
 <script>
 
-const token = new URLSearchParams(
-
-    window.location.search
-
-).get("token");
+const token = new URLSearchParams(window.location.search).get("token");
 
 const canvas = document.getElementById("canvasFirma");
-
 const ctx = canvas.getContext("2d");
+
+const estado = document.getElementById("estado");
+
+let dibujando = false;
+let hayFirma = false;
+
+/*=========================================
+  Ajustar tamaño
+=========================================*/
 
 function ajustarCanvas(){
 
@@ -253,25 +257,191 @@ function ajustarCanvas(){
 
     canvas.height = rect.height;
 
+    configurarLapiz();
+
 }
 
-window.addEventListener(
+window.addEventListener("resize", ajustarCanvas);
 
-    "resize",
+function configurarLapiz(){
 
-    ajustarCanvas
+    ctx.lineWidth = 2.5;
 
-);
+    ctx.lineCap = "round";
+
+    ctx.lineJoin = "round";
+
+    ctx.strokeStyle = "#000";
+
+}
+
+/*=========================================
+  Obtener coordenadas
+=========================================*/
+
+function obtenerPosicion(event){
+
+    const rect = canvas.getBoundingClientRect();
+
+    if(event.touches){
+
+        return{
+
+            x:event.touches[0].clientX-rect.left,
+
+            y:event.touches[0].clientY-rect.top
+
+        };
+
+    }
+
+    return{
+
+        x:event.clientX-rect.left,
+
+        y:event.clientY-rect.top
+
+    };
+
+}
+
+/*=========================================
+  Iniciar dibujo
+=========================================*/
+
+function iniciar(event){
+
+    event.preventDefault();
+
+    dibujando=true;
+
+    hayFirma=true;
+
+    const pos=obtenerPosicion(event);
+
+    ctx.beginPath();
+
+    ctx.moveTo(pos.x,pos.y);
+
+}
+
+/*=========================================
+  Dibujar
+=========================================*/
+
+function mover(event){
+
+    if(!dibujando) return;
+
+    event.preventDefault();
+
+    const pos=obtenerPosicion(event);
+
+    ctx.lineTo(pos.x,pos.y);
+
+    ctx.stroke();
+
+}
+
+/*=========================================
+  Finalizar
+=========================================*/
+
+function finalizar(event){
+
+    event.preventDefault();
+
+    dibujando=false;
+
+}
+
+/*=========================================
+  Mouse
+=========================================*/
+
+canvas.addEventListener("mousedown",iniciar);
+
+canvas.addEventListener("mousemove",mover);
+
+canvas.addEventListener("mouseup",finalizar);
+
+canvas.addEventListener("mouseleave",finalizar);
+
+/*=========================================
+  Touch
+=========================================*/
+
+canvas.addEventListener("touchstart",iniciar);
+
+canvas.addEventListener("touchmove",mover);
+
+canvas.addEventListener("touchend",finalizar);
+
+/*=========================================
+  Limpiar
+=========================================*/
+
+document
+.getElementById("btnLimpiar")
+.addEventListener("click",()=>{
+
+    ctx.clearRect(
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+
+    );
+
+    configurarLapiz();
+
+    hayFirma=false;
+
+});
+
+/*=========================================
+  Guardar
+=========================================*/
+
+document
+.getElementById("btnGuardar")
+.addEventListener("click",()=>{
+
+    if(!hayFirma){
+
+        alert(
+
+            "Debe realizar una firma."
+
+        );
+
+        return;
+
+    }
+
+    estado.style.display="block";
+
+    estado.innerHTML=
+
+        "Procesando firma...";
+
+});
+
+/*=========================================
+  Inicializar
+=========================================*/
 
 ajustarCanvas();
 
-document
-    .getElementById("estado")
-    .style.display="block";
+estado.style.display="block";
 
-document
-    .getElementById("estado")
-    .innerHTML="Solicitud: "+token;
+estado.innerHTML=
+
+    "Solicitud: "+token;
 
 </script>
 
