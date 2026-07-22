@@ -2,15 +2,46 @@ function doGet(e){
 
   if(e.parameter.token){
 
-      const html = HtmlService.createTemplateFromFile("firma");
+      const solicitud = Solicitudes.buscar(
+
+          e.parameter.token
+
+      );
+
+      if(!solicitud){
+
+          return HtmlService
+
+              .createHtmlOutput(
+
+                  "Solicitud no encontrada."
+
+              );
+
+      }
+
+      const html = HtmlService
+
+          .createTemplateFromFile("firma");
 
       html.token = e.parameter.token;
 
+      html.solicitud = JSON.stringify(
+
+          solicitud
+
+      );
+
       return html
+
           .evaluate()
+
           .setTitle("Firma de Acta")
+
           .setXFrameOptionsMode(
+
               HtmlService.XFrameOptionsMode.ALLOWALL
+
           );
 
   }

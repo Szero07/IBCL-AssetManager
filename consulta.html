@@ -1,0 +1,117 @@
+<script>
+
+const Consulta={
+
+    buscar(){
+
+        const codigo=document
+            .getElementById("buscarEquipo")
+            .value
+            .trim()
+            .toUpperCase();
+
+        if(codigo==""){
+
+            alert("Ingrese un código.");
+
+            return;
+
+        }
+
+        google.script.run
+
+        .withSuccessHandler(resultado=>{
+
+            if(!resultado){
+
+                alert("Equipo no encontrado.");
+
+                return;
+
+            }
+
+            this.mostrar(resultado);
+
+        })
+
+        .consultarEquipo(codigo);
+
+    },
+
+    mostrar(resultado){
+
+        const equipo=resultado.equipo;
+
+        const responsable=resultado.responsable;
+
+        //------------------------------------
+        // Información
+        //------------------------------------
+
+        document.getElementById("conCodigo").innerText=equipo.id;
+
+        document.getElementById("conDescripcion").innerText=equipo.descripcion;
+
+        document.getElementById("conMarca").innerText=equipo.marca;
+
+        document.getElementById("conModelo").innerText=equipo.modelo;
+
+        document.getElementById("conSerial").innerText=equipo.serial;
+
+        document.getElementById("conEstado").innerText=equipo.estado;
+
+        document.getElementById("conUbicacion").innerText=equipo.ubicacion || "";
+
+        if(responsable){
+
+            document.getElementById("conResponsable").innerHTML=`
+
+                <b>${responsable.nombre}</b><br>
+
+                ${responsable.cargo}<br>
+
+                ${responsable.cedula}
+
+            `;
+
+        }else{
+
+            document.getElementById("conResponsable").innerHTML=
+
+                "Sin responsable";
+
+        }
+
+        //------------------------------------
+        // Historial
+        //------------------------------------
+
+        const tbody=document.querySelector("#tablaHistorial tbody");
+
+        tbody.innerHTML="";
+
+        resultado.historial.forEach(m=>{
+
+            tbody.innerHTML+=`
+
+            <tr>
+
+                <td>${m.fecha}</td>
+
+                <td>${m.tipo}</td>
+
+                <td>${m.nombre}</td>
+
+                <td>${m.ubicacion}</td>
+
+            </tr>
+
+            `;
+
+        });
+
+    }
+
+};
+
+</script>

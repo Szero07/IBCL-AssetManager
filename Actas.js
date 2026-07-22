@@ -10,73 +10,143 @@ const Actas = (() => {
   /**
    * Obtiene la primera tabla del documento
    */
-  function obtenerTabla(doc) {
+  /**
+ * Obtiene la tabla de equipos
+ * Buscando el encabezado de la tabla.
+ */
+function obtenerTabla(doc){
 
-    const tablas = doc.getBody().getTables();
+    const body = doc.getBody();
 
-    if (tablas.length === 0) {
+    const tablas = body.getTables();
 
-      throw new Error("La plantilla no contiene una tabla.");
+    for(const tabla of tablas){
+
+        if(tabla.getNumRows()==0){
+
+            continue;
+
+        }
+
+        const encabezado = tabla.getRow(0);
+
+        if(encabezado.getNumCells()<6){
+
+            continue;
+
+        }
+
+        const c1 = encabezado.getCell(0).getText().trim().toUpperCase();
+        const c2 = encabezado.getCell(1).getText().trim().toUpperCase();
+        const c3 = encabezado.getCell(2).getText().trim().toUpperCase();
+
+        if(
+
+            c1=="ID" &&
+
+            c2.includes("ELEMENTO ENTREGADO") &&
+
+            c3=="MARCA"
+
+        ){
+
+            return tabla;
+
+        }
 
     }
 
-    return tablas[0];
+    throw new Error(
 
-  }
+        "No se encontró la tabla de equipos en la plantilla."
+
+    );
+
+}
 
   /**
    * Llena la tabla de equipos
+   * utilizando las filas vacías de la plantilla.
    */
   function llenarTabla(doc, equipos) {
 
-    const tabla = obtenerTabla(doc);
+      const tabla = obtenerTabla(doc);
+      if (equipos.length > tabla.getNumRows() - 1) {
 
-    equipos.forEach(eq => {
+          throw new Error(
+              "La plantilla solo soporta " +
+              (tabla.getNumRows() - 1) +
+              " equipos."
+          );
 
-      const fila = tabla.appendTableRow();
+      }
 
-      fila.appendTableCell(eq.id || "");
+      equipos.forEach((eq, i) => {
 
-      fila.appendTableCell(eq.descripcion || "");
+          // La fila 0 es el encabezado
+          const fila = tabla.getRow(i + 1);
 
-      fila.appendTableCell(eq.marca || "");
+          fila.getCell(0).setText(eq.id || "");
 
-      fila.appendTableCell(eq.modelo || "");
+          fila.getCell(1).setText(eq.descripcion || "");
 
-      fila.appendTableCell(eq.serial || "");
+          fila.getCell(2).setText(eq.marca || "");
 
-      fila.appendTableCell(eq.observaciones || "");
+          fila.getCell(3).setText(eq.modelo || "");
 
-    });
+          fila.getCell(4).setText(eq.serial || "");
 
-    return doc;
+          fila.getCell(5).setText(
+              eq.observaciones ||
+              eq.estado ||
+              ""
+          );
+
+      });
 
   }
 
   /**
    * Variables para la plantilla
    */
-  function obtenerVariables(datos) {
+  /**
+ * Construye el objeto de variables
+ */
+function obtenerVariables(datos) {
 
-    return {
+  const fecha = new Date(datos.fecha);
 
-      TIPO: datos.tipo || "",
+  const zona = Session.getScriptTimeZone();
 
-      FECHA: datos.fecha || "",
+  return {
 
-      EMPLEADO: datos.empleado.nombre || "",
+    TIPO: datos.tipo || "",
 
-      CEDULA: datos.empleado.cedula || "",
+    FECHA: Utilities.formatDate(
+      fecha,
+      zona,
+      "dd/MM/yyyy"
+    ),
 
-      CARGO: datos.empleado.cargo || "",
+    HORA: Utilities.formatDate(
+      fecha,
+      zona,
+      "HH:mm"
+    ),
 
-      UBICACION: datos.empleado.ubicacion || "",
+    EMPLEADO: datos.empleado.nombre || "",
 
-      OBSERVACIONES: datos.observaciones || ""
+    CEDULA: datos.empleado.cedula || "",
 
-    };
+    CARGO: datos.empleado.cargo || "",
 
-  }
+    UBICACION: datos.empleado.ubicacion || "",
+
+    OBSERVACIONES: datos.observaciones || ""
+
+  };
+
+}
 
   /**
    * Busca un marcador dentro del documento
@@ -95,24 +165,36 @@ const Actas = (() => {
 
   }
 
+
   /**
    * Inserta una imagen reemplazando un marcador
    */
   function insertarImagen(parrafo, marcador, blob){
 
-    if(!parrafo){
+      if(!parrafo){
+          return;
+      }
 
-      return;
+      const texto = parrafo.editAsText();
 
-    }
+      const indice = texto.getText().indexOf(marcador);
 
-    parrafo.setText("");
+      if(indice === -1){
+          return;
+      }
 
-    const imagen = parrafo.appendInlineImage(blob);
+      texto.deleteText(
+          indice,
+          indice + marcador.length - 1
+      );
 
-    imagen.setWidth(170);
+      const imagen = parrafo.insertInlineImage(
+          indice,
+          blob
+      );
 
-    imagen.setHeight(70);
+      imagen.setWidth(170);
+      imagen.setHeight(70);
 
   }
 

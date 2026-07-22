@@ -26,9 +26,9 @@ const CONFIG = {
 
   PLANTILLAS:{
 
-      ENTREGA:"1hW_KmYOg35hVv6SwOudvHRc4Vf7SidoGwHSdAlvvlsY",
+      ENTREGA:"1tCS8Lod5vMceguxl_i3nIFsCPjTE9FkMry42J3x-iDU",
 
-      DEVOLUCION:"14uvSYLaCoWo1Hbpzs8R6EWhcRWp114kJqyhLL_QNAgE"
+      DEVOLUCION:"1i8_cwC57oCROch_RpjCuHbr-J2HVyQCPUiQgk3ubR0M"
 
   },
 
@@ -40,7 +40,7 @@ const CONFIG = {
 
   WEBAPP:{
 
-      URL:"https://script.google.com/macros/s/AKfycbz3nSkFTNrv1n-paBUb2waNWNjg6ziu1ziqtd9A8EcIuKCyB6uJNPYSSFI6Kj9QABCJ0A/exec"
+      URL:"https://script.google.com/macros/s/AKfycbwOroWkW-z49cNLnO-6E7UEp7qx65JvHGWSoqHwpBa0ZFtz3URbEQ2Sxy1oW2bXwKpseQ/exec"
 
   }
 

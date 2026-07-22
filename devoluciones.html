@@ -5,24 +5,42 @@ const Devolucion={
     equipos:[],
 
     responsable:null,
+    
+    urlWebApp:null,
 
     iniciar(){
 
-        const input=document.getElementById("codigoDevolucion");
+      console.log("Inicializando devolución");
 
-        input.addEventListener("keydown",(e)=>{
+      const input=document.getElementById("codigoDevolucion");
 
-            if(e.key==="Enter"){
+      console.log(input);
 
-                e.preventDefault();
+      input.addEventListener("keydown",(e)=>{
 
-                Devolucion.agregarEquipo();
+          console.log("Tecla:",e.key);
 
-            }
+          if(e.key==="Enter"){
 
-        });
+              console.log("ENTER");
 
-    },
+              e.preventDefault();
+
+              Devolucion.agregarEquipo();
+
+          }
+
+      });
+
+      google.script.run
+      .withSuccessHandler(url=>{
+
+          this.urlWebApp = url;
+
+      })
+      .obtenerURLWebApp();
+
+  },
 
     agregarEquipo(){
 
@@ -192,37 +210,207 @@ const Devolucion={
 
     registrar(){
 
-        if(this.equipos.length===0){
+      if(this.equipos.length===0){
 
-            alert("Debe agregar al menos un equipo.");
+          alert("Debe agregar al menos un equipo.");
 
-            return;
+          return;
 
-        }
+      }
 
-        const datos={
+      const datos={
 
-            equipos:this.equipos.map(e=>e.id)
+          equipos:this.equipos.map(e=>e.id),
 
-        };
+          observaciones:document
 
-        google.script.run
+              .getElementById("observacionesDevolucion")
 
-        .withSuccessHandler(resultado=>{
+              .value
 
-            alert(resultado.mensaje);
+              .trim()
 
-            if(resultado.ok){
+      };
 
-                this.limpiar();
+      const boton=document.getElementById(
 
-            }
+          "btnRegistrarDevolucion"
 
-        })
+      );
 
-        .registrarDevolucion(datos);
+      boton.disabled=true;
+
+      boton.innerHTML="Creando solicitud...";
+
+      google.script.run
+
+      .withSuccessHandler(resultado=>{
+
+          if(!resultado.ok){
+
+              boton.disabled=false;
+
+              boton.innerHTML="Registrar Devolución";
+
+              alert(resultado.mensaje);
+
+              return;
+
+          }
+
+          const url =
+
+              this.urlWebApp +
+
+              "?token=" +
+
+              resultado.token;
+
+          document
+
+              .getElementById("modalEmpleado")
+
+              .innerHTML=`
+
+                  <strong>${this.responsable.nombre}</strong><br>
+
+                  ${this.responsable.cargo}<br>
+
+                  ${this.responsable.cedula}
+
+              `;
+
+          let html="";
+
+          this.equipos.forEach(eq=>{
+
+              html+=`
+
+                  <div class="itemEquipo">
+
+                      <strong>${eq.id}</strong><br>
+
+                      ${eq.descripcion}<br>
+
+                      ${eq.marca} ${eq.modelo}
+
+                  </div>
+
+              `;
+
+          });
+
+          document
+
+              .getElementById("modalEquipos")
+
+              .innerHTML=html;
+
+          document
+
+              .getElementById("tokenSolicitud")
+
+              .value=resultado.token;
+
+          document
+
+              .getElementById("urlSolicitud")
+
+              .value=url;
+
+          document
+
+              .getElementById("qrSolicitud")
+
+              .src=
+
+              "https://quickchart.io/qr?size=220&text="+
+
+              encodeURIComponent(url);
+
+          document
+
+              .getElementById("modalSolicitud")
+
+              .classList.remove("oculto");
+
+          boton.disabled=false;
+
+          boton.innerHTML="Registrar Devolución";
+
+      })
+
+      .withFailureHandler(error=>{
+
+          boton.disabled=false;
+
+          boton.innerHTML="Registrar Devolución";
+
+          alert(error.message);
+
+      })
+
+      .registrarDevolucion(datos);
+
+  },
+
+
+
+
+    mostrarSolicitud(resultado){
+
+        const url=this.urlWebApp+"?token="+resultado.token;
+
+        document.getElementById("modalEmpleado").innerHTML=`
+
+            <strong>${this.responsable.nombre}</strong><br>
+
+            ${this.responsable.cargo}<br>
+
+            ${this.responsable.cedula}
+
+        `;
+
+        let html="";
+
+        this.equipos.forEach(eq=>{
+
+            html+=`
+
+                <div class="itemEquipo">
+
+                    <strong>${eq.id}</strong><br>
+
+                    ${eq.descripcion}<br>
+
+                    ${eq.marca} ${eq.modelo}
+
+                </div>
+
+            `;
+
+        });
+
+        document.getElementById("modalEquipos").innerHTML=html;
+
+        document.getElementById("tokenSolicitud").value=resultado.token;
+
+        document.getElementById("urlSolicitud").value=url;
+
+        document.getElementById("qrSolicitud").src=
+
+            "https://quickchart.io/qr?size=220&text="+
+
+            encodeURIComponent(url);
+
+        document.getElementById("modalSolicitud")
+
+            .classList.remove("oculto");
 
     },
+
+
+
 
     limpiar(){
 

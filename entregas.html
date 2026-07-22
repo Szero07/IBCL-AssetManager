@@ -234,8 +234,6 @@ const Entrega={
 
             .withSuccessHandler((resultado)=>{
 
-                alert("TOKEN: " + resultado.token);
-
                 if(!resultado.ok){
 
                     boton.disabled=false;
@@ -248,13 +246,11 @@ const Entrega={
 
                 }
 
-                window.location.href =
+                this.mostrarSolicitud(resultado);
 
-                    this.urlWebApp +
+                boton.disabled=false;
 
-                    "?token=" +
-
-                    resultado.token;
+                boton.innerHTML="Registrar Entrega";
 
             })
 
@@ -271,6 +267,153 @@ const Entrega={
             .registrarEntrega(datos);
 
     },
+
+
+
+
+    mostrarSolicitud(resultado){
+
+        const url = this.urlWebApp + "?token=" + resultado.token;
+
+        // Empleado
+        document.getElementById("modalEmpleado").innerHTML = `
+            <strong>${this.empleado.nombre}</strong><br>
+            ${this.empleado.cargo}<br>
+            ${this.empleado.cedula}
+        `;
+
+        // Equipos
+        let htmlEquipos = "";
+
+        this.equipos.forEach(eq => {
+
+            htmlEquipos += `
+                <div class="itemEquipo">
+                    <strong>${eq.id}</strong><br>
+                    ${eq.descripcion}<br>
+                    ${eq.marca} ${eq.modelo}
+                </div>
+            `;
+
+        });
+
+        document.getElementById("modalEquipos").innerHTML = htmlEquipos;
+
+        // Token
+        document.getElementById("tokenSolicitud").value =
+            resultado.token;
+
+        // URL
+        document.getElementById("urlSolicitud").value =
+            url;
+
+        // QR
+        document.getElementById("qrSolicitud").src =
+            "https://quickchart.io/qr?size=220&text=" +
+            encodeURIComponent(url);
+
+        // Mostrar modal
+        document
+            .getElementById("modalSolicitud")
+            .classList.remove("oculto");
+
+    },
+
+
+
+
+    abrirSolicitud(){
+
+        window.open(
+
+            document.getElementById(
+
+                "urlSolicitud"
+
+            ).value,
+
+            "_blank"
+
+        );
+
+    },
+
+    enviarWhatsApp(){
+
+        const url = document.getElementById(
+            "urlSolicitud"
+        ).value;
+
+        const mensaje =
+
+    `Hola.
+
+    Se ha generado una solicitud de entrega de activos de IBCL.
+
+    Por favor revise la información y firme el acta en el siguiente enlace:
+
+    ${url}`;
+
+        window.open(
+
+            "https://wa.me/?text="+
+
+            encodeURIComponent(mensaje),
+
+            "_blank"
+
+        );
+
+  },
+
+
+
+  enviarCorreo(){
+
+        const url = document.getElementById(
+            "urlSolicitud"
+        ).value;
+
+        const asunto =
+            "Firma de acta de entrega de activos";
+
+        const cuerpo =
+
+    `Buen día.
+
+    Se ha generado una solicitud de entrega de activos.
+
+    Puede revisar la información y firmar el documento en el siguiente enlace:
+
+    ${url}
+
+    Gracias.`;
+
+        window.location.href=
+
+            "mailto:?subject="+
+
+            encodeURIComponent(asunto)+
+
+            "&body="+
+
+            encodeURIComponent(cuerpo);
+
+  },
+
+
+    cerrarModal(){
+
+        document
+
+            .getElementById("modalSolicitud")
+
+            .classList.add("oculto");
+
+        this.limpiar();
+
+    },
+
 
     limpiar(){
 

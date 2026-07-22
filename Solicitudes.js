@@ -168,11 +168,64 @@ const Solicitudes = (() => {
 
     }
 
+    /**
+   * Lista todas las solicitudes
+   */
+  function listar(){
+
+    const datos = hoja()
+      .getDataRange()
+      .getValues();
+
+    const lista = [];
+
+    for(let i = 1; i < datos.length; i++){
+
+      let solicitud = {};
+
+      try{
+
+        solicitud = JSON.parse(String(datos[i][6]));
+
+      }catch(e){
+
+        solicitud = {};
+
+      }
+
+      lista.push({
+
+        token: datos[i][0],
+        tipo: datos[i][1],
+        fecha: datos[i][2],
+        empleado: datos[i][3],
+        cedula: datos[i][4],
+        estado: datos[i][5],
+        datos: solicitud,
+        firma: datos[i][7],
+        pdf: datos[i][8]
+
+      });
+
+    }
+
+    lista.reverse();
+
+    Logger.log("LISTA FINAL");
+    Logger.log(JSON.stringify(lista));
+
+    return lista;
+
+  }
+
+
   return {
 
     crear,
 
     buscar,
+    
+    listar,
 
     firmar,
 
@@ -223,5 +276,16 @@ function guardarPDFSolicitud(token,pdf){
         pdf
 
     );
+
+}
+
+function obtenerSolicitudes(){
+
+  const lista = Solicitudes.listar();
+
+  Logger.log("ANTES");
+  Logger.log(Array.isArray(lista));
+
+  return JSON.parse(JSON.stringify(lista));
 
 }

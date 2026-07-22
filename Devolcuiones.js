@@ -1,58 +1,163 @@
-const Devoluciones = (()=>{
+/**
+ * ============================================================
+ * IBCL Asset Manager
+ * Módulo: Devoluciones
+ * Versión: 2.0.0
+ * ============================================================
+ */
 
-    function registrar(datos){
+const Devoluciones = (() => {
 
-        let devueltos=0;
+  /**
+   * Crear solicitud de devolución
+   */
+  function registrar(datos){
 
-        for(const idEquipo of datos.equipos){
+    const equipos = [];
 
-            const equipo=Equipos.buscar(idEquipo);
+    let empleado = null;
 
-            if(!equipo)
-                continue;
+    for(const id of datos.equipos){
 
-            if(equipo.estado!="Asignado")
-                continue;
+      const equipo = Equipos.buscar(id);
 
-            const empleado=Personal.obtenerPorTexto(equipo.utilizado);
+      if(!equipo){
+        continue;
+      }
 
-            Equipos.devolver(idEquipo);
+      if(equipo.estado != "Asignado"){
+        continue;
+      }
 
-            Movimientos.registrarDevolucion(
+      if(!empleado){
 
-                equipo,
+        empleado = Personal.obtenerPorTexto(
 
-                empleado
+          equipo.utilizado
 
-            );
+        );
 
-            devueltos++;
+      }
 
-        }
-
-        return{
-
-            ok:true,
-
-            cantidad:devueltos,
-
-            mensaje:"Devolución registrada correctamente."
-
-        };
+      equipos.push(equipo);
 
     }
 
+    if(equipos.length == 0){
+
+      return{
+
+        ok:false,
+
+        mensaje:"No existen equipos para devolver."
+
+      };
+
+    }
+
+    //-----------------------------------------
+    // Crear solicitud
+    //-----------------------------------------
+
+    const token = Solicitudes.crear({
+
+      tipo:"DEVOLUCION",
+
+      fecha:new Date(),
+
+      empleado:empleado,
+
+      equipos:equipos,
+
+      observaciones:datos.observaciones || ""
+
+    });
+
     return{
 
-        registrar
+      ok:true,
+
+      token:token,
+
+      mensaje:"Solicitud creada correctamente."
 
     };
 
-})();
+  }
 
+  /**
+   * Finalizar devolución
+   */
+  function finalizar(token){
+
+    const solicitud = Solicitudes.buscar(token);
+
+    if(!solicitud){
+
+      throw new Error(
+
+        "Solicitud no encontrada."
+
+      );
+
+    }
+
+    const datos = solicitud.datos;
+
+    //-----------------------------------------
+    // Generar PDF
+    //-----------------------------------------
+
+    const pdf = PDF.generar(token);
+
+    //-----------------------------------------
+    // Actualizar inventario
+    //-----------------------------------------
+
+    datos.equipos.forEach(eq=>{
+
+      Equipos.devolver(eq.id);
+
+      Movimientos.registrarDevolucion(
+
+        eq,
+
+        datos.empleado
+
+      );
+
+    });
+
+    return{
+
+      ok:true,
+
+      pdf:pdf,
+
+      mensaje:"Devolución registrada correctamente."
+
+    };
+
+  }
+
+  return{
+
+    registrar,
+
+    finalizar
+
+  };
+
+})();
 
 function registrarDevolucion(datos){
 
-    return Devoluciones.registrar(datos);
+  return Devoluciones.registrar(datos);
+
+}
+
+function finalizarDevolucion(token){
+
+  return Devoluciones.finalizar(token);
 
 }

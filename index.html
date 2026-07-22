@@ -51,6 +51,15 @@
 
         </button>
 
+        <button
+          id="btnSolicitudes"
+          class="menu"
+          onclick="App.mostrarVista('solicitudes')">
+
+          📋 Solicitudes
+
+      </button>
+
     </nav>
 
     <main>
@@ -340,22 +349,166 @@
 
         <!-- ===================== -->
 
-        <section id="consulta"
-                 style="display:none;">
+        <section id="consulta" style="display:none;">
 
-            <div class="card">
+          <div class="card">
 
-                <h2>Consulta de Equipos</h2>
+              <h2>🔍 Consulta de Activos</h2>
 
-                <p>
+              <div class="fila">
 
-                    Aquí aparecerá el buscador.
+                  <div class="grow">
 
-                </p>
+                      <label>Código del equipo</label>
 
-            </div>
+                      <input
+                          id="buscarEquipo"
+                          placeholder="CPU0001">
 
-        </section>
+                  </div>
+
+                  <div>
+
+                      <button
+                          style="margin-top:28px;"
+                          onclick="Consulta.buscar()">
+
+                          Buscar
+
+                      </button>
+
+                  </div>
+
+              </div>
+
+          </div>
+
+          <div class="card">
+
+              <h2>Información</h2>
+
+              <table>
+
+                  <tr>
+                      <td><b>Código</b></td>
+                      <td id="conCodigo"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Descripción</b></td>
+                      <td id="conDescripcion"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Marca</b></td>
+                      <td id="conMarca"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Modelo</b></td>
+                      <td id="conModelo"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Serial</b></td>
+                      <td id="conSerial"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Estado</b></td>
+                      <td id="conEstado"></td>
+                  </tr>
+
+                  <tr>
+                      <td><b>Ubicación</b></td>
+                      <td id="conUbicacion"></td>
+                  </tr>
+
+              </table>
+
+          </div>
+
+          <div class="card">
+
+              <h2>Responsable</h2>
+
+              <div id="conResponsable">
+
+                  Sin información
+
+              </div>
+
+          </div>
+
+          <div class="card">
+
+              <h2>Historial</h2>
+
+              <table id="tablaHistorial">
+
+                  <thead>
+
+                      <tr>
+
+                          <th>Fecha</th>
+
+                          <th>Movimiento</th>
+
+                          <th>Responsable</th>
+
+                          <th>Ubicación</th>
+
+                      </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                  </tbody>
+
+              </table>
+
+          </div>
+
+      </section>
+
+
+      <!------------------------------------->
+      <!------------ SOLICITUDES ------------>
+      <!------------------------------------->
+
+      <section id="solicitudes" style="display:none;">
+
+        <div class="card">
+
+            <h2>📋 Solicitudes</h2>
+
+            <table id="tablaSolicitudes">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Fecha</th>
+                        <th>Empleado</th>
+                        <th>Tipo</th>
+                        <th>Equipos</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
 
     </main>
 
@@ -371,8 +524,11 @@
 <?!= include('entregas'); ?>
 <?!= include('devoluciones'); ?>
 <?!= include('consulta'); ?>
+<?!= include('solicitudes'); ?>
 <?!= include('utils'); ?>
+<?!= include("ModalSolicitud"); ?>
 
+<script src="https://unpkg.com/html5-qrcode"></script>
 </body>
 
 </html>

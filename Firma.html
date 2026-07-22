@@ -195,13 +195,47 @@
 
 <div class="contenedor">
 
-    <h1>Firma del Acta - FIRMA NUEVA 2</h1>
+    <h1>Firma del Acta</h1>
 
     <p>
 
         Lea el documento previamente y firme en el espacio inferior.
 
     </p>
+
+    <div id="resumenSolicitud">
+
+      <h2>Empleado</h2>
+
+      <div id="datosEmpleado"></div>
+
+      <h2 style="margin-top:25px;">
+
+          Equipos
+
+      </h2>
+
+      <table id="tablaResumen">
+
+          <thead>
+
+              <tr>
+
+                  <th>ID</th>
+
+                  <th>Descripción</th>
+
+              </tr>
+
+          </thead>
+
+          <tbody>
+
+          </tbody>
+
+      </table>
+
+  </div>
 
     <div id="panelFirma">
 
@@ -236,6 +270,9 @@
 <script>
 
 const token = "<?= token ?>";
+const solicitud = JSON.parse(
+      '<?= solicitud ?>'
+  );
 
 if(!token){
 
@@ -250,6 +287,50 @@ const estado = document.getElementById("estado");
 
 let dibujando = false;
 let hayFirma = false;
+
+
+
+function cargarResumen(){
+
+    const empleado = solicitud.datos.empleado;
+
+    document.getElementById(
+        "datosEmpleado"
+    ).innerHTML=`
+
+        <b>${empleado.nombre}</b><br>
+
+        ${empleado.cedula}<br>
+
+        ${empleado.cargo}
+
+    `;
+
+    const tbody=document.querySelector(
+
+        "#tablaResumen tbody"
+
+    );
+
+    tbody.innerHTML="";
+
+    solicitud.datos.equipos.forEach(eq=>{
+
+        tbody.innerHTML+=`
+
+        <tr>
+
+            <td>${eq.id}</td>
+
+            <td>${eq.descripcion}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
 
 /*=========================================
   Ajustar tamaño
@@ -440,13 +521,27 @@ document
 
             estado.innerHTML="Generando acta...";
 
-            google.script.run
+            if(solicitud.tipo=="ENTREGA"){
 
-                .withSuccessHandler(finalizarProceso)
+              google.script.run
 
-                .withFailureHandler(errorProceso)
+                  .withSuccessHandler(finalizarProceso)
 
-                .finalizarEntrega(token);
+                  .withFailureHandler(errorProceso)
+
+                  .finalizarEntrega(token);
+
+          }else{
+
+              google.script.run
+
+                  .withSuccessHandler(finalizarProceso)
+
+                  .withFailureHandler(errorProceso)
+
+                  .finalizarDevolucion(token);
+
+          }
 
         })
 
@@ -526,6 +621,8 @@ function volver(){
 /*=========================================
   Inicializar
 =========================================*/
+
+cargarResumen();
 
 ajustarCanvas();
 

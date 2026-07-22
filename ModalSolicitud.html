@@ -1,0 +1,209 @@
+<div id="modalSolicitud" class="modalSolicitud oculto">
+
+    <div class="modalSolicitudContenido">
+
+        <h2>Solicitud creada correctamente</h2>
+
+        <p class="estadoSolicitud">
+
+            Pendiente de firma
+
+        </p>
+
+        <hr style="margin:20px 0;">
+
+        <h3>Empleado</h3>
+
+        <div id="modalEmpleado"></div>
+
+        <hr style="margin:20px 0;">
+
+        <h3>Equipos</h3>
+
+        <div id="modalEquipos"></div>
+
+        <hr style="margin:20px 0;">
+
+        <img
+            id="qrSolicitud"
+            width="220">
+
+        <div class="campoModal">
+
+            <label>Token</label>
+
+            <input
+                id="tokenSolicitud"
+                readonly>
+
+        </div>
+
+        <div class="campoModal">
+
+            <label>Enlace</label>
+
+            <input
+                id="urlSolicitud"
+                readonly>
+
+        </div>
+
+        <div class="accionesSolicitud">
+
+          <button onclick="Entrega.copiarURL()">
+              📋 Copiar
+          </button>
+
+          <button onclick="Entrega.abrirSolicitud()">
+              🌐 Abrir
+          </button>
+
+          <button onclick="Entrega.enviarWhatsApp()">
+              💬 WhatsApp
+          </button>
+
+          <button onclick="Entrega.enviarCorreo()">
+              ✉ Correo
+          </button>
+
+          <button onclick="Entrega.cerrarModal()">
+              ❌ Cerrar
+          </button>
+
+      </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.modalSolicitud{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.oculto{
+
+    display:none;
+
+}
+
+.modalSolicitudContenido{
+
+    width:520px;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+
+}
+
+.campoModal{
+
+    margin-top:18px;
+
+}
+
+.campoModal label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-weight:bold;
+
+}
+
+.campoModal input{
+
+    width:100%;
+
+    padding:8px;
+
+}
+
+.accionesSolicitud{
+
+    margin-top:25px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+}
+
+#modalEmpleado{
+
+    text-align:left;
+
+    padding:10px;
+
+    background:#F7F9FC;
+
+    border-radius:8px;
+
+    margin-bottom:15px;
+
+}
+
+#modalEquipos{
+
+    max-height:180px;
+
+    overflow:auto;
+
+    text-align:left;
+
+    border:1px solid #DDD;
+
+    border-radius:8px;
+
+    padding:10px;
+
+    background:white;
+
+}
+
+.itemEquipo{
+
+    padding:8px;
+
+    border-bottom:1px solid #EEE;
+
+}
+
+.itemEquipo:last-child{
+
+    border-bottom:none;
+
+}
+
+.itemEquipo strong{
+
+    color:#1565C0;
+
+}
+
+</style>

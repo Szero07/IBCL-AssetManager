@@ -19,6 +19,7 @@ const App = {
         document.getElementById("entrega").style.display = "none";
         document.getElementById("devolucion").style.display = "none";
         document.getElementById("consulta").style.display = "none";
+        document.getElementById("solicitudes").style.display="none";
 
         document.getElementById(vista).style.display = "block";
 
@@ -36,6 +37,11 @@ const App = {
 
         if(vista=="consulta")
             document.getElementById("btnConsulta").classList.add("activo");
+
+        if(vista=="solicitudes")
+            {document.getElementById("btnSolicitudes").classList.add("activo");
+              Solicitudes.cargar();
+            }
 
         this.vistaActual = vista;
         if(vista==="entrega"){

@@ -75,9 +75,7 @@ const Plantillas = (() => {
    */
   function guardar(doc){
 
-    doc.saveAndClose();
-
-    return true;
+    return doc;
 
   }
 

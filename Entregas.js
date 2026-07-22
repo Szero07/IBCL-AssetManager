@@ -94,6 +94,8 @@ const Entregas = (() => {
 
       token:token,
 
+      url: CONFIG.WEBAPP.URL + "?token=" + token,
+
       mensaje:"Solicitud creada correctamente."
 
     };

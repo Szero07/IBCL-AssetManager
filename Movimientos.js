@@ -26,8 +26,6 @@ const Movimientos = (() => {
 
       new Date(),
 
-      datos.tipo,
-
       datos.idEquipo,
 
       datos.descripcion,
@@ -45,6 +43,8 @@ const Movimientos = (() => {
       datos.cargo,
 
       datos.ubicacion,
+
+      datos.tipo,
 
       datos.observaciones || ""
 
@@ -120,13 +120,74 @@ const Movimientos = (() => {
 
   }
 
+
+
+
+  /**
+ * Historial de un equipo
+ */
+  function buscarHistorial(idEquipo){
+
+    try{
+
+        const datos = hoja()
+            .getDataRange()
+            .getValues();
+
+        const historial=[];
+
+        for(let i=1;i<datos.length;i++){
+
+            if(String(datos[i][1]) != String(idEquipo)){
+                continue;
+            }
+
+            historial.push({
+
+                fecha: Utilities.formatDate(
+                    datos[i][0],
+                    Session.getScriptTimeZone(),
+                    "dd/MM/yyyy HH:mm"
+                ),
+                codigo:datos[i][1],
+                descripcion:datos[i][2],
+                marca:datos[i][3],
+                modelo:datos[i][4],
+                serial:datos[i][5],
+                nombre:datos[i][6],
+                cedula:datos[i][7],
+                cargo:datos[i][8],
+                ubicacion:datos[i][9],
+                tipo:datos[i][10]
+
+            });
+
+        }
+
+        Logger.log(historial);
+        Logger.log(JSON.stringify(historial));
+
+        return historial;
+
+    }catch(e){
+
+        Logger.log(e);
+
+        throw e;
+
+    }
+
+}
+
   return{
 
     registrar,
 
     registrarEntrega,
 
-    registrarDevolucion
+    registrarDevolucion,
+
+    buscarHistorial
 
   };
 

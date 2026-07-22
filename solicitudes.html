@@ -1,0 +1,162 @@
+<script>
+
+const Solicitudes={
+
+    lista:[],
+    urlWebApp:null,
+
+    cargar(){
+
+        google.script.run
+        .withSuccessHandler(url=>{
+
+            Solicitudes.urlWebApp = url;
+
+            google.script.run
+            .withSuccessHandler(lista=>{
+
+                Solicitudes.lista = lista;
+                Solicitudes.mostrar();
+
+            })
+            .obtenerSolicitudes();
+
+        })
+        .obtenerURLWebApp();
+
+    },
+
+    mostrar(){
+
+      const tbody=document.querySelector("#tablaSolicitudes tbody");
+
+      tbody.innerHTML="";
+
+      this.lista.forEach((s,i)=>{
+
+          tbody.innerHTML += `
+
+          <tr>
+
+              <td>${new Date(s.fecha).toLocaleString()}</td>
+
+              <td>${s.empleado}</td>
+
+              <td>${s.tipo}</td>
+
+              <td>${s.datos.equipos.length}</td>
+
+              <td>${this.estado(s.estado)}</td>
+
+              <td>
+
+                  <button onclick="Solicitudes.ver(${i})">
+
+                      👁
+
+                  </button>
+
+              </td>
+
+          </tr>
+
+          `;
+
+      });
+
+  },
+
+    estado(estado){
+
+        switch(estado){
+
+            case "PENDIENTE":
+                return "🟡 Pendiente";
+
+            case "FIRMADA":
+                return "🟢 Firmada";
+
+            case "CANCELADA":
+                return "🔴 Cancelada";
+
+            default:
+                return estado;
+
+        }
+
+    },
+
+    ver(indice){
+
+        const s=this.lista[indice];
+        const url = Solicitudes.urlWebApp + "?token=" + s.token;
+
+        let html="";
+
+        if(s.datos && s.datos.equipos){
+
+            s.datos.equipos.forEach(eq=>{
+
+                html+=`
+
+                <tr>
+
+                    <td>${eq.id}</td>
+
+                    <td>${eq.descripcion}</td>
+
+                </tr>
+
+                `;
+
+            });
+
+        }
+
+        document.getElementById("modalEmpleado").innerHTML=`
+
+            <strong>${s.datos.empleado.nombre}</strong><br>
+
+            ${s.datos.empleado.cargo}<br>
+
+            ${s.datos.empleado.cedula}
+
+        `;
+
+        document.getElementById("modalEquipos").innerHTML=`
+
+            <table>
+
+                <tr>
+
+                    <th>Código</th>
+
+                    <th>Descripción</th>
+
+                </tr>
+
+                ${html}
+
+            </table>
+
+        `;
+
+        const token = s.token;
+
+        document.getElementById("tokenSolicitud").value = token;
+
+        document.getElementById("urlSolicitud").value = url;
+
+        document.getElementById("qrSolicitud").src =
+            "https://quickchart.io/qr?size=250&text=" +
+            encodeURIComponent(url);
+
+        document
+            .getElementById("modalSolicitud")
+            .classList.remove("oculto");
+
+    }
+
+};
+
+</script>
